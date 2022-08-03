@@ -3,7 +3,8 @@
 
 % elegir cantidad de intentos, si se acaban, se termina la ronda
 
-adivina(P,buho):- tamano(P,pequeno),
+adivina(P,buho):- 
+    tamano(P,pequeno),
     tamano_pico(P,pequeno),
     color_plumaje(P,marron),
     color_pico(P,negro),
@@ -11,7 +12,8 @@ adivina(P,buho):- tamano(P,pequeno),
     alimentacion(P,rapina),
     puede_volar(P),
     migran(P).
-adivina(P,ganso):-tamano(P,mediano),
+adivina(P,ganso):-
+    tamano(P,mediano),
     tamano_pico(P,mediano),
     color_plumaje(P,blanco),
     color_pico(P,naranja),
@@ -19,7 +21,8 @@ adivina(P,ganso):-tamano(P,mediano),
     puede_nadar(P),
     puede_volar(P),
     migran(P).
-adivina(P,gallina):-tamano(P,mediano),
+adivina(P,gallina):-
+    tamano(P,mediano),
     tamano_pico(P,mediano),
     color_plumaje(P,blanco),
     color_pico(P,amarillo),
