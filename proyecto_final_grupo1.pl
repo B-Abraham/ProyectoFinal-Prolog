@@ -1,8 +1,9 @@
 :-dynamic cierto/1.
 :-dynamic falso/1.
 
-% elegir cantidad de intentos, si se acaban, se termina la ronda
 
+% En este apartado es donde se guardan las caracteristicas que posee
+% cada ave.
 adivina(P,buho):-
     tamano(P,pequeno),
     tamano_pico(P,pequeno),
@@ -90,23 +91,32 @@ adivina(P,avestruz):-
     alimentacion(P,herbivoro),
     puede_caminar(P).
 
+% En este apartado es donde se realiza las preguntas y se lee la
+% respuesta
 visualiza_pregunta(A):-write(A), write('(si/no)? ').
 pregunta(A,Resp):-visualiza_pregunta(A), read(Resp).
 
+%En este apartado es donde se guarda tanto lo cierto como lo falso.
 responde(si, A):-!,assertz(cierto(A)).
 responde(no, A):-!,assertz(falso(A)), fail.
 
+% en este apartado es donde se realizan las preguntas y estan ordenadas
+% en relacion a la regla que menos se llama a la que mas se llama y
+% entre las que mas se llaman se ordenan por la diversidad que posee el
+% que tiene mayor diversidad primero y la que menos diversidad posee
+% de ultima para asi poder adivinar con mayor rapidez la ave.
 preguntable(nocturno(_)).
 preguntable(puede_nadar(_)).
 preguntable(puede_volar(_)).
 preguntable(puede_caminar(_)).
 preguntable(migran(_)).
-preguntable(tamano(_,_)).
-preguntable(tamano_pico(_,_)).
 preguntable(color_plumaje(_,_)).
 preguntable(color_pico(_,_)).
 preguntable(alimentacion(_,_)).
+preguntable(tamano(_,_)).
+preguntable(tamano_pico(_,_)).
 
+%En este apartado es donde se ejecuta el programa.
 resuelve(true):-!.
 resuelve((A,B)):-!,resuelve(A), resuelve(B).
 resuelve(A):-falso(A), !, fail.
