@@ -1,18 +1,17 @@
-from json import load
 from pyswip import Prolog
+
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-
-
 
 prolog = Prolog()
 prolog.consult("proyecto_final_grupo1.pl")
 
 def query():  
-    res = []  
-    for soln in prolog.query("resuelve(adivina(ave8,X))."):
-        res.append(soln["X"])
+    res = []
+    
+    for i in prolog.query("resuelve(adivina(ave8,X))."):
+        res.append(i)
     return res
 
 def respuesta(r):
@@ -32,11 +31,7 @@ def begin():
 
     query1.place(x=470, y=160)
     query2.place(x=570, y=160)
-    res = query()
-    test = ttk.Label(root,text=adivinar)
-    test.place(x=490, y=120)
-    test = ttk.Label(root,text=res)
-    test.place(x=490, y=100)
+    
 
 
 def display_photo(foto):
@@ -88,9 +83,4 @@ query2 = ttk.Button(root,text="No",command=respuesta('no.'))
 
 show_entry()
 
-
-
-
 root.mainloop()
-
-
