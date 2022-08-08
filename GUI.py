@@ -35,12 +35,15 @@ def display_foto(image_label,resultado,fotos):
                 "pinguino":8,
                 "tucan":9,
                 }
-    
-    if(dictfotos[resultado]):
-        image_label.config(image=fotos[dictfotos[resultado]])
-        image_label.config(text='El animal en el que estabas pensando era un '+resultado+'?')
-        
-        image_label.place(x=450, y=100)
+    if(resultado != []):
+        if(dictfotos[resultado[0]['X']]):
+            image_label.config(image=fotos[dictfotos[resultado]])
+            image_label.config(text='El animal en el que estabas pensando era un '+resultado+'?')
+            
+            image_label.place(x=450, y=100)
+    else:
+        image_label.config(text='El animal en el que estabas pensando no lo tengo registrado, para la proxima si podre adivinarlo')
+        image_label.place(x=410, y=140)
 
 def visualizar_fin(ressi,resno,assertsi,assertno,label_pregunta,image_label,resultado,fotos):
     display_foto(image_label,resultado,fotos)
@@ -55,7 +58,7 @@ def display_next_match(denuevosi,denuevono,assertsi,assertno,image_label,label_p
     assertno.place_forget()
     image_label.place_forget()
     label_pregunta.config(text = "Quiere jugar de nuevo?")
-    label_pregunta.place(x=550, y=120)
+    label_pregunta.place(x=530, y=120)
     denuevosi.place(x=510, y=180)
     denuevono.place(x=610, y=180)
 
