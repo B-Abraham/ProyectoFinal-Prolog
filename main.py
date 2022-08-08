@@ -1,50 +1,60 @@
 from pyswip import Prolog
 import tkinter as tk
-from tkinter import ttk
+from tkinter import Frame, ttk
 from PIL import Image, ImageTk
-import re
 
 from GUI import *
 from python_prolog_interface import *
 
 prolog = Prolog()
 prolog.consult("proyecto_final_grupo1.pl")
-
-def get_clauses(p,nombre):
-    animales = []
-    clausulas = []
-    
-    for i in p.query("clause(adivina("+nombre+",X),Y)."):
-        animales.append(i['X'])
-        clausulas.append(i['Y'])
-    return animales,clausulas
+preguntas = []
 
 def respuesta(r):
-    pass
+    global preguntas
+    if(preguntas.__len__() > 1):
+        display_pregunta(preguntas[0],label_pregunta)
+        preguntas.pop(0)
+    else:
+        print("fin")
+
+
+
 
 def begin():
     begin_gui(animal_entry,begin_game,label1,ressi,resno)
     adivinado = animal_entry.get()
-    animales, clausulas = get_clauses(prolog,adivinado)
-    for i in clausulas:
-        print(i)
-    print()
-    for i in animales:
-        print(i)
     
+    clausulas = get_clauses(prolog,adivinado)
+    temp = []
+    for i in clausulas:
+        [temp.append(j) for j in i if j not in temp]
+    clausulas = temp
 
-def ronda(preguntas):
-    for pregunta in preguntas:
-        print(pregunta)
+    global preguntas
+    preguntas = clausulas
+    
+    ronda(clausulas)
+
+def ronda(clausulas):
+    global preguntas
+    preguntas.pop(0)
+    for pregunta in clausulas:
+        if(bool(list(prolog.query("busca("+pregunta+")."))) is False):
+            display_pregunta(pregunta,label_pregunta)
+
 
 # Root o raiz de la interfaz grafica (tkinter)
 root = tk.Tk()
 root.title("Proyecto Final")
 root.geometry('1280x720')
+root.config(bg="lightgray")
 
 #Widgets estaticos
+left_frame = Frame(root, width=1260, height=700)
+left_frame.place(x=10,y=10)
 title = ttk.Label(root, text='Adivina Quien',font=("TkDefaultFont", 14))
-title.place(x=510, y=20)
+title.place(x=540, y=50)
 exit_button = ttk.Button(root, text='Salir', command=lambda: root.quit())
 exit_button.place(x=1150, y=650)
 
@@ -77,9 +87,10 @@ foto_tucan = Image.open('./img/tucan.png')
 foto_tucan = ImageTk.PhotoImage(foto_tucan.resize((200,200)))
 
 #Widgets durante la ejecucion del juego
-ressi = ttk.Button(root,text="Si",command=respuesta('si.'))
-resno = ttk.Button(root,text="No",command=respuesta('no.'))
+ressi = ttk.Button(root,text="Si",command=lambda: respuesta('cierto('))
+resno = ttk.Button(root,text="No",command=lambda: respuesta('falso('))
+label_pregunta = ttk.Label(root, text="")
 
-show_entry(label1,animal_entry,begin_game)
+initialize_gui(label1,animal_entry,begin_game)
 
 root.mainloop()
