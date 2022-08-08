@@ -37,11 +37,12 @@ def display_foto(image_label,resultado,fotos):
                 }
     if(resultado != []):
         if(dictfotos[resultado[0]['X']]):
-            image_label.config(image=fotos[dictfotos[resultado]])
-            image_label.config(text='El animal en el que estabas pensando era un '+resultado+'?')
+            image_label.config(image=fotos[dictfotos[resultado[0]['X']]])
+            image_label.config(text='El animal en el que estabas pensando era un '+resultado[0]['X']+'?')
             
             image_label.place(x=450, y=100)
     else:
+        image_label.config(image=None)
         image_label.config(text='El animal en el que estabas pensando no lo tengo registrado, para la proxima si podre adivinarlo')
         image_label.place(x=410, y=140)
 
