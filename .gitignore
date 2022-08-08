@@ -1,2 +1,4 @@
+#Ignore python cache files
+.pyc
 #Ignore Prolog backup file
 .pl~

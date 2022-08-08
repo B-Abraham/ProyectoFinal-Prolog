@@ -93,14 +93,14 @@ adivina(P,avestruz):-
 
 % En este apartado es donde se realiza las preguntas y se lee la
 % respuesta
-visualiza_pregunta(A):-write(A), write('(si/no)? ').
-pregunta(A,Resp):-visualiza_pregunta(A), read(Resp).
+% visualiza_pregunta(A):-write(A), write('(si/no)? ').
+% pregunta(A,Resp):-visualiza_pregunta(A), read(Resp).
 
-%En este apartado es donde se guarda tanto lo cierto como lo falso.
-responde(si, A):-!,assertz(cierto(A)).
-responde(no, A):-!,assertz(falso(A)), fail.
+% En este apartado es donde se guarda tanto lo cierto como lo falso.
+% responde(si, A):-!,assertz(cierto(A)).
+% responde(no, A):-!,assertz(falso(A)), fail.
 
-% en este apartado es donde se realizan las preguntas y estan ordenadas
+% En este apartado es donde se realizan las preguntas y estan ordenadas
 % en relacion a la regla que menos se llama a la que mas se llama y
 % entre las que mas se llaman se ordenan por la diversidad que posee el
 % que tiene mayor diversidad primero y la que menos diversidad posee
@@ -116,10 +116,10 @@ preguntable(alimentacion(_,_)).
 preguntable(tamano(_,_)).
 preguntable(tamano_pico(_,_)).
 
-%En este apartado es donde se ejecuta el programa.
+% En este apartado es donde se ejecuta el programa.
 resuelve(true):-!.
 resuelve((A,B)):-!,resuelve(A), resuelve(B).
 resuelve(A):-falso(A), !, fail.
 resuelve(A):-cierto(A),!.
 resuelve(A):-clause(A,B),resuelve(B).
-resuelve(A):-preguntable(A),pregunta(A,Resp),responde(Resp,A).
+% resuelve(A):-preguntable(A),pregunta(A,Resp),responde(Resp,A).

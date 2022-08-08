@@ -1,47 +1,46 @@
 from pyswip import Prolog
-
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
+import re
+
+from GUI import *
+from python_prolog_interface import *
 
 prolog = Prolog()
 prolog.consult("proyecto_final_grupo1.pl")
 
-def query():  
-    res = []
+def get_clauses(p,nombre):
+    animales = []
+    clausulas = []
     
-    for i in prolog.query("resuelve(adivina(ave8,X))."):
-        res.append(i)
-    return res
+    for i in p.query("clause(adivina("+nombre+",X),Y)."):
+        animales.append(i['X'])
+        clausulas.append(i['Y'])
+    return animales,clausulas
 
 def respuesta(r):
     pass
 
-def show_entry():
-    label1.place(x=230, y=80)
-    animal_entry.place(x=490, y=120)
-    animal_entry.focus()
-    begin_game.place(x=510, y=160)
-
 def begin():
-    adivinar = animal_entry.get()
-    animal_entry.place_forget()
-    begin_game.place_forget()
-    label1.place_forget()
-
-    query1.place(x=470, y=160)
-    query2.place(x=570, y=160)
+    begin_gui(animal_entry,begin_game,label1,ressi,resno)
+    adivinado = animal_entry.get()
+    animales, clausulas = get_clauses(prolog,adivinado)
+    for i in clausulas:
+        print(i)
+    print()
+    for i in animales:
+        print(i)
     
 
+def ronda(preguntas):
+    for pregunta in preguntas:
+        print(pregunta)
 
-def display_photo(foto):
-    image_label = ttk.Label(root, image=foto, text='El animal en el que estabas pensando era este?', compound='top')
-    image_label.place(x=400, y=250)
-
+# Root o raiz de la interfaz grafica (tkinter)
 root = tk.Tk()
 root.title("Proyecto Final")
 root.geometry('1280x720')
-
 
 #Widgets estaticos
 title = ttk.Label(root, text='Adivina Quien',font=("TkDefaultFont", 14))
@@ -78,9 +77,9 @@ foto_tucan = Image.open('./img/tucan.png')
 foto_tucan = ImageTk.PhotoImage(foto_tucan.resize((200,200)))
 
 #Widgets durante la ejecucion del juego
-query1 = ttk.Button(root,text="Si",command=respuesta('si.'))
-query2 = ttk.Button(root,text="No",command=respuesta('no.'))
+ressi = ttk.Button(root,text="Si",command=respuesta('si.'))
+resno = ttk.Button(root,text="No",command=respuesta('no.'))
 
-show_entry()
+show_entry(label1,animal_entry,begin_game)
 
 root.mainloop()
