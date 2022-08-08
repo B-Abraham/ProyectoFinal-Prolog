@@ -13,4 +13,5 @@ def get_clauses(p,nombre):
         cl = re.sub("\),", "), ", cl)
         cl = re.sub("\)+", ")", cl)
         clausulas.append(cl.split(", "))
+    print(clausulas)
     return clausulas

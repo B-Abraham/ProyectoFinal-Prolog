@@ -1,3 +1,4 @@
+import time
 from pyswip import Prolog
 import tkinter as tk
 from tkinter import Frame, ttk
@@ -9,19 +10,11 @@ from python_prolog_interface import *
 prolog = Prolog()
 prolog.consult("proyecto_final_grupo1.pl")
 preguntas = []
-
-def respuesta(r):
-    global preguntas
-    if(preguntas.__len__() > 1):
-        display_pregunta(preguntas[0],label_pregunta)
-        preguntas.pop(0)
-    else:
-        print("fin")
-
-
-
+s = ""
+adivinado = None
 
 def begin():
+    global adivinado
     begin_gui(animal_entry,begin_game,label1,ressi,resno)
     adivinado = animal_entry.get()
     
@@ -33,15 +26,43 @@ def begin():
 
     global preguntas
     preguntas = clausulas
-    
-    ronda(clausulas)
+    display_pregunta(preguntas[0],label_pregunta)
 
-def ronda(clausulas):
+def respuesta(r):
     global preguntas
-    preguntas.pop(0)
-    for pregunta in clausulas:
-        if(bool(list(prolog.query("busca("+pregunta+")."))) is False):
-            display_pregunta(pregunta,label_pregunta)
+    global adivinado
+    if(preguntas.__len__() > 1):
+        n = 1
+        while(n==1 and preguntas.__len__() > 0):
+            p = preguntas[0].split("(")[0]
+            #print(list(prolog.query("busca("+p+"(X,Y))")))
+            if(len(list(prolog.query("busca("+p+"(X,Y))"))) == 0):
+                
+                display_pregunta(preguntas[1],label_pregunta)
+                prolog.assertz(r+preguntas[0]+")")
+                n = 0
+            preguntas.pop(0)
+            if(preguntas.__len__() == 0):
+                #prolog.assertz(r+preguntas[0]+")")
+                resultado = list(prolog.query("resuelve(adivina("+adivinado+",X))"))
+                visualizar_fin(ressi,resno,assertsi,assertno,label_pregunta,image_label,resultado[0]['X'],fotos)
+                break
+    else:
+        if(preguntas.__len__() > 0):
+            prolog.assertz(r+preguntas[0]+")")
+        resultado = list(prolog.query("resuelve(adivina("+adivinado+",X))"))
+        visualizar_fin(ressi,resno,assertsi,assertno,label_pregunta,image_label,resultado[0]['X'],fotos)
+
+def assert_nuevo(r):
+    global adivinado
+    print("asertando")
+
+    if(r == 'si'):
+        list(prolog.query("responde(si,adivina("+adivinado+",X))"))
+    elif(r == 'no'):
+        list(prolog.query("responde(no,adivina("+adivinado+",X))"))
+    
+    display_next_match(denuevosi,denuevono,assertsi,assertno,image_label,label_pregunta)
 
 
 # Root o raiz de la interfaz grafica (tkinter)
@@ -65,31 +86,37 @@ animal_entry = ttk.Entry(root, textvariable=animal)
 begin_game = ttk.Button(root,text="Comenzar juego",command=begin)
 
 #Fotos
-foto_aguila = Image.open('./img/aguila.png')
-foto_aguila = ImageTk.PhotoImage(foto_aguila.resize((200,200)))
-foto_avestruz = Image.open('./img/avestruz.png')
-foto_avestruz = ImageTk.PhotoImage(foto_avestruz.resize((200,200)))
-foto_buho = Image.open('./img/buho.png')
-foto_buho = ImageTk.PhotoImage(foto_buho.resize((200,200)))
-foto_cisne_negro = Image.open('./img/cisne_negro.png')
-foto_cisne_negro = ImageTk.PhotoImage(foto_cisne_negro.resize((200,200)))
-foto_flamenco = Image.open('./img/flamenco.png')
-foto_flamenco = ImageTk.PhotoImage(foto_flamenco.resize((200,200)))
-foto_gallo = Image.open('./img/gallo.png')
-foto_gallo = ImageTk.PhotoImage(foto_gallo.resize((200,200)))
-foto_ganso = Image.open('./img/ganso.png')
-foto_ganso = ImageTk.PhotoImage(foto_ganso.resize((200,200)))
-foto_loro = Image.open('./img/loro.png')
-foto_loro = ImageTk.PhotoImage(foto_loro.resize((200,200)))
-foto_pinguino = Image.open('./img/pinguino.png')
-foto_pinguino = ImageTk.PhotoImage(foto_pinguino.resize((200,200)))
-foto_tucan = Image.open('./img/tucan.png')
-foto_tucan = ImageTk.PhotoImage(foto_tucan.resize((200,200)))
+fotos = []
+fotos.append(Image.open('./img/aguila.png'))
+fotos[0] = ImageTk.PhotoImage(fotos[0].resize((200,200)))
+fotos.append(Image.open('./img/avestruz.png'))
+fotos[1] = ImageTk.PhotoImage(fotos[1].resize((200,200)))
+fotos.append(Image.open('./img/buho.png'))
+fotos[2] = ImageTk.PhotoImage(fotos[2].resize((200,200)))
+fotos.append(Image.open('./img/cisne_negro.png'))
+fotos[3] = ImageTk.PhotoImage(fotos[3].resize((200,200)))
+fotos.append(Image.open('./img/flamenco.png'))
+fotos[4] = ImageTk.PhotoImage(fotos[4].resize((200,200)))
+fotos.append(Image.open('./img/gallo.png'))
+fotos[5] = ImageTk.PhotoImage(fotos[5].resize((200,200)))
+fotos.append(Image.open('./img/ganso.png'))
+fotos[6] = ImageTk.PhotoImage(fotos[6].resize((200,200)))
+fotos.append(Image.open('./img/loro.png'))
+fotos[7] = ImageTk.PhotoImage(fotos[7].resize((200,200)))
+fotos.append(Image.open('./img/pinguino.png'))
+fotos[8] = ImageTk.PhotoImage(fotos[8].resize((200,200)))
+fotos.append(Image.open('./img/tucan.png'))
+fotos[9] = ImageTk.PhotoImage(fotos[9].resize((200,200)))
 
 #Widgets durante la ejecucion del juego
 ressi = ttk.Button(root,text="Si",command=lambda: respuesta('cierto('))
 resno = ttk.Button(root,text="No",command=lambda: respuesta('falso('))
+assertsi = ttk.Button(root,text="Si",command=lambda: assert_nuevo('si'))
+assertno = ttk.Button(root,text="No",command=lambda: assert_nuevo('no'))
+denuevosi = ttk.Button(root,text="Si",command=lambda: restart(label1,animal_entry,begin_game,denuevosi,denuevono,label_pregunta))
+denuevono = ttk.Button(root,text="No",command=lambda: root.quit())
 label_pregunta = ttk.Label(root, text="")
+image_label = ttk.Label(root, text='', compound='top')
 
 initialize_gui(label1,animal_entry,begin_game)
 
