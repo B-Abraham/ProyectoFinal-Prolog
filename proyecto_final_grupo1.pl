@@ -4,77 +4,81 @@
 
 % En este apartado es donde se guardan las caracteristicas que posee
 % cada ave.
+
+
+zancuda(P):- tamano(P,grande), tamano_pico(P,grande).
+
+pajaro(P):- tamano(P,pequeño).
+
+corredora(P):- puede_caminar(P).
+
+rapaz(P):- tipo_alimentacion(P,carnivoro),tamano_pico(P,mediano),tamano(P,mediano).
+rapaz(P):- tipo_alimentacion(P,carnivoro),tamano_pico(P,grande),tamano(P,mediano).
+
+anseriforme(P):- puede_caminar(P),puede_nadar(P),tamano(P,mediano).
+
 adivina(P,buho):-
-    tamano(P,pequeno),
-    tamano_del_pico(P,pequeno),
     color_del_plumaje(P,marron),
     color_del_pico(P,negro),
     nocturno(P),
-    alimentacion(P,carnivoro),
     puede_volar(P),
-    migra(P).
+    migra(P),
+    rapaz(P).
 adivina(P,ganso):-
-    tamano(P,mediano),
     tamano_del_pico(P,mediano),
     color_del_plumaje(P,blanco),
     color_del_pico(P,naranja),
     alimentacion(P,omnivoro),
-    puede_nadar(P),
     puede_volar(P),
-    puede_caminar(P),
-    migra(P).
+    migra(P),
+    anseriforme(P).
 adivina(P,gallo):-
-    tamano(P,pequeno),
+    tamano(P,mediano),
     tamano_del_pico(P,pequeno),
     color_del_plumaje(P,blanco),
     color_del_pico(P,amarillo),
     alimentacion(P,omnivoro),
-    puede_caminar(P).
+    corredora(P).
 adivina(P,aguila):-
-    tamano(P,mediano),
-    tamano_del_pico(P,grande),
     color_del_plumaje(P,marron),
     color_del_pico(P,amarillo),
-    alimentacion(P,carnivoro),
     puede_volar(P),
     puede_caminar(P),
-    migra(P).
+    migra(P),
+    rapaz(P).
 adivina(P,flamenco):-
-    tamano(P,grande),
-    tamano_del_pico(P,grande),
     color_del_plumaje(P,rosado),
     color_del_pico(P,blanco_negro),
     alimentacion(P,omnivoro),
     puede_volar(P),
     puede_caminar(P),
-    migra(P).
+    migra(P),
+    zancuda(P).
 adivina(P,loro):-
-    tamano(P,pequeno),
     tamano_del_pico(P,mediano),
     color_del_plumaje(P,rojo),
     color_del_pico(P,blanco),
     alimentacion(P,omnivoro),
     puede_volar(P),
     puede_caminar(P),
-    migra(P).
+    migra(P),
+    pajaro(P).
 adivina(P,tucan):-
-    tamano(P,pequeno),
     tamano_del_pico(P,grande),
     color_del_plumaje(P,negro),
     color_del_pico(P,naranja),
     alimentacion(P,herbivoro),
     puede_volar(P),
-    migra(P).
+    migra(P),
+    pajaro(P).
 adivina(P,cisne_negro):-
-    tamano(P,mediano),
     tamano_del_pico(P,mediano),
     color_del_plumaje(P,negro),
     color_del_pico(P,rojo),
     alimentacion(P,herbivoro),
-    puede_nadar(P),
     puede_volar(P),
-    puede_caminar(P),
-    migra(P).
+    migra(P),
+    anseriforme(P).
 adivina(P,pinguino):-
     tamano(P,mediano),
     tamano_del_pico(P,mediano),
@@ -82,15 +86,15 @@ adivina(P,pinguino):-
     color_del_pico(P,amarillo),
     alimentacion(P,carnivoro),
     puede_nadar(P),
-    puede_caminar(P),
-    migra(P).
+    migra(P),
+    corredora(P).
 adivina(P,avestruz):-
     tamano(P,grande),
     tamano_del_pico(P,mediano),
     color_del_plumaje(P,negro),
     color_del_pico(P,amarillo),
     alimentacion(P,herbivoro),
-    puede_caminar(P).
+    corredora(P).
 
 visualiza_pregunta(A):-write(A), write('(si/no)? ').
 pregunta(A,Resp):-visualiza_pregunta(A), read(Resp).
