@@ -11,13 +11,15 @@ from prolog_parser import *
 prolog = Prolog()
 prolog.consult("proyecto_final_grupo1.pl")
 preguntas = []
-s = ""
 adivinado = None
+puntaje = 0
 
 # Se encarga de la inicializacion del juego, una vez digitado el nombre en el prompt
 def begin():
     global adivinado
     global preguntas
+    global puntaje
+    puntaje = 0
 
     begin_gui(animal_entry,begin_game,label1,ressi,resno)
     adivinado = animal_entry.get()
@@ -28,6 +30,9 @@ def begin():
 def respuesta(r):
     global preguntas
     global adivinado
+    global puntaje
+    puntaje = puntaje + 1
+
     if(r == True):
         prolog.assertz("cierto("+preguntas[0]+")")
     else:
@@ -35,47 +40,10 @@ def respuesta(r):
     
     resultado = list(prolog.query("resuelve(adivina("+adivinado+",X))"))
     if(bool(resultado)):
-        visualizar_fin(ressi,resno,assertsi,assertno,label_pregunta,image_label,resultado,fotos)
+        visualizar_fin(ressi,resno,denuevosi,denuevono,label_pregunta,image_label,resultado,fotos,puntaje.__str__())
     else:
         preguntas = filter_clauses(prolog,adivinado,preguntas[0],r)
         display_pregunta(preguntas[0],label_pregunta)
-
-    
-    '''
-    if(preguntas.__len__() > 1):
-        n = 1
-        while(n==1 and preguntas.__len__() > 0):
-            p = preguntas[0].split("(")[0]
-            #print(list(prolog.query("busca("+p+"(X,Y))")))
-            if(len(list(prolog.query("busca("+p+"(X,Y))"))) == 0):
-                
-                display_pregunta(preguntas[1],label_pregunta)
-                prolog.assertz(r+preguntas[0]+")")
-                n = 0
-            preguntas.pop(0)
-            if(preguntas.__len__() == 0):
-                #prolog.assertz(r+preguntas[0]+")")
-                resultado = list(prolog.query("resuelve(adivina("+adivinado+",X))"))
-                visualizar_fin(ressi,resno,assertsi,assertno,label_pregunta,image_label,resultado,fotos)
-                break
-    else:
-        if(preguntas.__len__() > 0):
-            prolog.assertz(r+preguntas[0]+")")
-        resultado = list(prolog.query("resuelve(adivina("+adivinado+",X))"))
-        visualizar_fin(ressi,resno,assertsi,assertno,label_pregunta,image_label,resultado,fotos)
-'''
-
-# Se encarga de insertar el nuevo animal, en caso de que este no se encuentre en la base de conocimientos
-def assert_nuevo(r):
-    global adivinado    
-
-    if(r == 'si'):
-        list(prolog.query("responde(si,adivina("+adivinado+",X))"))
-    elif(r == 'no'):
-        list(prolog.query("responde(no,adivina("+adivinado+",X))"))
-    
-    display_next_match(denuevosi,denuevono,assertsi,assertno,image_label,label_pregunta)
-
 
 # Root o raiz de la interfaz grafica (tkinter)
 root = tk.Tk()
@@ -115,18 +83,16 @@ fotos.append(Image.open('./img/tucan.png'))
 fotos[9] = ImageTk.PhotoImage(fotos[9].resize((200,200)))
 
 #Widgets utilizados durante la ejecucion del juego
-label1 = ttk.Label(root, text='Escriba el nombre del animal que la computadora intentará adivinar (no se preocupe, esta no sabrá lo que escribirá):')
+label1 = ttk.Label(root, text='Escriba el nombre del animal que la computadora intentará adivinar (no se preocupe, esta no sabrá lo que escribirá):',font=("TkDefaultFont", 14))
 animal = tk.StringVar()
 animal_entry = ttk.Entry(root, textvariable=animal)
 begin_game = ttk.Button(root,text="Comenzar juego",command=begin)
 ressi = ttk.Button(root,text="Si",command=lambda: respuesta(True))
 resno = ttk.Button(root,text="No",command=lambda: respuesta(False))
-assertsi = ttk.Button(root,text="Si",command=lambda: assert_nuevo('si'))
-assertno = ttk.Button(root,text="No",command=lambda: assert_nuevo('no'))
-denuevosi = ttk.Button(root,text="Si",command=lambda: restart(label1,animal_entry,begin_game,denuevosi,denuevono,label_pregunta))
+label_pregunta = ttk.Label(root, text="",font=("TkDefaultFont", 14))
+image_label = ttk.Label(root, text='', compound='top',font=("TkDefaultFont", 14))
+denuevosi = ttk.Button(root,text="Si",command=lambda: restart(label1,animal_entry,begin_game,denuevosi,denuevono,image_label,label_pregunta))
 denuevono = ttk.Button(root,text="No",command=lambda: root.quit())
-label_pregunta = ttk.Label(root, text="")
-image_label = ttk.Label(root, text='', compound='top')
 
 initialize_gui(label1,animal_entry,begin_game)
 

@@ -4,7 +4,7 @@
 #from PIL import Image, ImageTk
 
 def initialize_gui(label,entry,button):
-    label.place(x=270, y=100)
+    label.place(x=150, y=100)
     entry.place(x=530, y=140)
     entry.focus()
     button.place(x=550, y=180)
@@ -19,10 +19,26 @@ def begin_gui(animal_entry,begin_game,label1,ressi,resno):
 
 def display_pregunta(pregunta,label_pregunta):
     texto = parsear_pregunta(pregunta)
-    label_pregunta.config(text = texto)
-    label_pregunta.place(x=450, y=120)
+    label_pregunta.config(text = texto,font=("TkDefaultFont", 14))
+    label_pregunta.place(x=400, y=120)
 
-def display_foto(image_label,resultado,fotos):
+def visualizar_fin(ressi,resno,assertsi,assertno,label_pregunta,image_label,resultado,fotos,puntaje):
+    display_foto(image_label,resultado,fotos,puntaje)
+    ressi.place_forget()
+    resno.place_forget()
+    label_pregunta.config(text = "Quieres jugar de nuevo?")
+    label_pregunta.place(x=510, y=350)
+    assertsi.place(x=510, y=400)
+    assertno.place(x=610, y=400)
+
+def restart(label,entry,button,denuevosi,denuevono,image_label,label_pregunta):
+    denuevosi.place_forget()
+    denuevono.place_forget()
+    image_label.place_forget()
+    label_pregunta.place_forget()
+    initialize_gui(label,entry,button)
+
+def display_foto(image_label,resultado,fotos,puntaje):
     dictfotos = {"aguila":0,
                 "avestruz":1,
                 "buho":2,
@@ -37,37 +53,13 @@ def display_foto(image_label,resultado,fotos):
     if(resultado != []):
         if(dictfotos[resultado[0]['X']]):
             image_label.config(image=fotos[dictfotos[resultado[0]['X']]])
-            image_label.config(text='El animal en el que estabas pensando era un '+resultado[0]['X']+'?')
+            image_label.config(text='El animal en el que estabas pensando era un '+resultado[0]['X']+', y tu puntaje fue de: '+puntaje)
             
-            image_label.place(x=450, y=100)
+            image_label.place(x=300, y=100)
     else:
         image_label.config(image=None)
-        image_label.config(text='El animal en el que estabas pensando no lo tengo registrado, para la proxima si podre adivinarlo')
-        image_label.place(x=410, y=140)
-
-def visualizar_fin(ressi,resno,assertsi,assertno,label_pregunta,image_label,resultado,fotos):
-    display_foto(image_label,resultado,fotos)
-    ressi.place_forget()
-    resno.place_forget()
-    label_pregunta.place_forget()
-    assertsi.place(x=510, y=330)
-    assertno.place(x=610, y=330)
-    
-def display_next_match(denuevosi,denuevono,assertsi,assertno,image_label,label_pregunta):
-    assertsi.place_forget()
-    assertno.place_forget()
-    image_label.place_forget()
-    label_pregunta.config(text = "Quiere jugar de nuevo?")
-    label_pregunta.place(x=530, y=120)
-    denuevosi.place(x=510, y=180)
-    denuevono.place(x=610, y=180)
-
-def restart(label,entry,button,denuevosi,denuevono,label_pregunta):
-    denuevosi.place_forget()
-    denuevono.place_forget()
-    label_pregunta.place_forget()
-    initialize_gui(label,entry,button)
-    
+        image_label.config(text='El animal en el que estabas pensando no lo tengo registrado...')
+        image_label.place(x=300, y=100)
 
 def parsear_pregunta(pregunta):
     print(pregunta)
@@ -75,6 +67,8 @@ def parsear_pregunta(pregunta):
         return "¿El animal en que estas pensando es nocturno?"
     elif(pregunta.find("puede_nadar") != -1):
         return "¿El animal en que estas pensando puede nadar?"
+    elif(pregunta.find("tiene_aletas") != -1):
+        return "¿El animal en que estas pensando tiene aletas?"
     elif(pregunta.find("puede_volar") != -1):
         return "¿El animal en que estas pensando puede volar?"
     elif(pregunta.find("puede_caminar") != -1):
