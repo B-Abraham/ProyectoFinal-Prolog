@@ -5,95 +5,101 @@
 % En este apartado es donde se guardan las caracteristicas que posee
 % cada ave.
 
-zancuda(P):- tamano(P,grande), tamano_pico(P,grande).
+zancuda(P):- tamano(P,grande),tamano_pico(P,grande),puede_caminar(P), puede_volar(P).
 
-pajaro(P):- tamano(P,pequeno).
-
-corredora(P):- puede_caminar(P).
-
-rapaz(P):- tipo_alimentacion(P,carnivoro),tamano_pico(P,mediano),tamano(P,mediano).
-rapaz(P):- tipo_alimentacion(P,carnivoro),tamano_pico(P,grande),tamano(P,mediano).
+rapaz(P):- tipo_de_alimentacion(P,carnivoro),tamano(P,mediano),puede_volar(P).
 
 anseriforme(P):- puede_caminar(P),puede_nadar(P),tamano(P,mediano).
 
+
 adivina(P,buho):-
+    tamano_del_pico(P,mediano),
     color_del_plumaje(P,marron),
     color_del_pico(P,negro),
     nocturno(P),
-    puede_volar(P),
     migra(P),
     rapaz(P).
+
 adivina(P,ganso):-
     tamano_del_pico(P,mediano),
     color_del_plumaje(P,blanco),
     color_del_pico(P,naranja),
-    alimentacion(P,omnivoro),
+    tipo_de_alimentacion(P,omnivoro),
     puede_volar(P),
     migra(P),
     anseriforme(P).
+
+adivina(P,flamenco):-
+    color_del_plumaje(P,rosado),
+    color_del_pico(P,amarillo),
+    tipo_de_alimentacion(P,omnivoro),
+    migra(P),
+    puede_nadar(P),
+    zancuda(P).
+
 adivina(P,gallo):-
     tamano(P,mediano),
     tamano_del_pico(P,pequeno),
     color_del_plumaje(P,blanco),
     color_del_pico(P,amarillo),
-    alimentacion(P,omnivoro),
-    corredora(P).
+    tipo_de_alimentacion(P,omnivoro),
+    puede_caminar(gallo).
+
 adivina(P,aguila):-
+    tamano_del_pico(P,mediano),
     color_del_plumaje(P,marron),
     color_del_pico(P,amarillo),
-    puede_volar(P),
     puede_caminar(P),
     migra(P),
     rapaz(P).
-adivina(P,flamenco):-
-    color_del_plumaje(P,rosado),
-    color_del_pico(P,blanco_negro),
-    alimentacion(P,omnivoro),
-    puede_volar(P),
-    puede_caminar(P),
-    migra(P),
-    zancuda(P).
+
 adivina(P,loro):-
+    tamano(P,pequeno),
     tamano_del_pico(P,mediano),
     color_del_plumaje(P,rojo),
     color_del_pico(P,blanco),
-    alimentacion(P,omnivoro),
+    tipo_de_alimentacion(P,omnivoro),
     puede_volar(P),
     puede_caminar(P),
-    migra(P),
-    pajaro(P).
+    migra(P).
+
+
 adivina(P,tucan):-
+    tamano(P,pequeno),
     tamano_del_pico(P,grande),
     color_del_plumaje(P,negro),
     color_del_pico(P,naranja),
-    alimentacion(P,herbivoro),
+    tipo_de_alimentacion(P,herbivoro),
     puede_volar(P),
-    migra(P),
-    pajaro(P).
+    migra(P).
+
 adivina(P,cisne_negro):-
     tamano_del_pico(P,mediano),
     color_del_plumaje(P,negro),
     color_del_pico(P,rojo),
-    alimentacion(P,herbivoro),
+    tipo_de_alimentacion(P,herbivoro),
     puede_volar(P),
     migra(P),
     anseriforme(P).
+
 adivina(P,pinguino):-
     tamano(P,mediano),
     tamano_del_pico(P,mediano),
     color_del_plumaje(P,blanco_negro),
     color_del_pico(P,amarillo),
-    alimentacion(P,carnivoro),
+    tipo_de_alimentacion(P,carnivoro),
     puede_nadar(P),
     migra(P),
-    corredora(P).
+    puede_caminar(P).
+
 adivina(P,avestruz):-
     tamano(P,grande),
     tamano_del_pico(P,mediano),
     color_del_plumaje(P,negro),
     color_del_pico(P,amarillo),
-    alimentacion(P,herbivoro),
-    corredora(P).
+    tipo_de_alimentacion(P,herbivoro),
+    puede_caminar(P).
+
 
 visualiza_pregunta(A):-write(A), write('(si/no)? ').
 pregunta(A,Resp):-visualiza_pregunta(A), read(Resp).
@@ -102,11 +108,7 @@ pregunta(A,Resp):-visualiza_pregunta(A), read(Resp).
 responde(si, A):-!,assertz(cierto(A)).
 responde(no, A):-!,assertz(falso(A)).
 
-% En este apartado es donde se inicializan las preguntas y estan
-% ordenadas en relacion a la regla que menos se llama a la que mas se
-% llama y entre las que mas se llaman se ordenan por la diversidad que
-% posee el que tiene mayor diversidad primero y la que menos diversidad
-% posee de ultima para asi poder adivinar con mayor rapidez la ave.
+%En este apartado se encuentran las preguntas por realizar.
 preguntable(nocturno(_)).
 preguntable(puede_nadar(_)).
 preguntable(puede_volar(_)).
@@ -114,7 +116,7 @@ preguntable(puede_caminar(_)).
 preguntable(migra(_)).
 preguntable(color_del_plumaje(_,_)).
 preguntable(color_del_pico(_,_)).
-preguntable(alimentacion(_,_)).
+preguntable(tipo_de_alimentacion(_,_)).
 preguntable(tamano(_,_)).
 preguntable(tamano_del_pico(_,_)).
 
