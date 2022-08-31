@@ -62,8 +62,6 @@ def filter_clauses(p,nombre,clause,bool):
 def filter_asserted(p,preguntas):
     res = []
     for i in preguntas:
-        print("busca("+i+")")
-        print(p.query("busca("+i+")"))
         if(bool(list(p.query("busca("+i+")"))) == False):
             res.append(i)
     return res

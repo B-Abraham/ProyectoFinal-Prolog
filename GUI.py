@@ -59,7 +59,6 @@ def display_foto(image_label,resultado,fotos,puntaje):
         image_label.place(x=300, y=100)
 
 def parsear_pregunta(pregunta):
-    print(pregunta)
     if(pregunta.find("nocturno") != -1):
         return "¿El animal en que estas pensando es nocturno?"
     elif(pregunta.find("puede_nadar") != -1):
