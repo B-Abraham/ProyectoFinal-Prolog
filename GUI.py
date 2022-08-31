@@ -1,7 +1,4 @@
 
-#import tkinter as tk
-#from tkinter import ttk
-#from PIL import Image, ImageTk
 
 def initialize_gui(label,entry,button):
     label.place(x=150, y=100)

@@ -87,9 +87,11 @@ label1 = ttk.Label(root, text='Escriba el nombre del animal que la computadora i
 animal = tk.StringVar()
 animal_entry = ttk.Entry(root, textvariable=animal)
 begin_game = ttk.Button(root,text="Comenzar juego",command=begin)
+
 ressi = ttk.Button(root,text="Si",command=lambda: respuesta(True))
 resno = ttk.Button(root,text="No",command=lambda: respuesta(False))
 label_pregunta = ttk.Label(root, text="",font=("TkDefaultFont", 14))
+
 image_label = ttk.Label(root, text='', compound='top',font=("TkDefaultFont", 14))
 denuevosi = ttk.Button(root,text="Si",command=lambda: restart(label1,animal_entry,begin_game,denuevosi,denuevono,image_label,label_pregunta))
 denuevono = ttk.Button(root,text="No",command=lambda: root.quit())
