@@ -1,8 +1,7 @@
-from email.mime import image
-import tkinter as tk
+
+#import tkinter as tk
 #from tkinter import ttk
-from PIL import Image, ImageTk
-from python_prolog_interface import *
+#from PIL import Image, ImageTk
 
 def initialize_gui(label,entry,button):
     label.place(x=270, y=100)
@@ -21,7 +20,7 @@ def begin_gui(animal_entry,begin_game,label1,ressi,resno):
 def display_pregunta(pregunta,label_pregunta):
     texto = parsear_pregunta(pregunta)
     label_pregunta.config(text = texto)
-    label_pregunta.place(x=480, y=120)
+    label_pregunta.place(x=450, y=120)
 
 def display_foto(image_label,resultado,fotos):
     dictfotos = {"aguila":0,
@@ -71,6 +70,7 @@ def restart(label,entry,button,denuevosi,denuevono,label_pregunta):
     
 
 def parsear_pregunta(pregunta):
+    print(pregunta)
     if(pregunta.find("nocturno") != -1):
         return "¿El animal en que estas pensando es nocturno?"
     elif(pregunta.find("puede_nadar") != -1):

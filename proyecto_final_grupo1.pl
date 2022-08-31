@@ -5,10 +5,9 @@
 % En este apartado es donde se guardan las caracteristicas que posee
 % cada ave.
 
-
 zancuda(P):- tamano(P,grande), tamano_pico(P,grande).
 
-pajaro(P):- tamano(P,peque�o).
+pajaro(P):- tamano(P,pequeno).
 
 corredora(P):- puede_caminar(P).
 
@@ -125,7 +124,7 @@ resuelve((A,B)):-!,resuelve(A), resuelve(B).
 resuelve(A):-falso(A), !, fail.
 resuelve(A):-cierto(A),!.
 resuelve(A):-clause(A,B),resuelve(B).
-% resuelve(A):-preguntable(A),pregunta(A,Resp),responde(Resp,A).
+resuelve(A):-preguntable(A),pregunta(A,Resp),responde(Resp,A).
 
 busca(A):- cierto(A),!.
 busca(A):- falso(A).

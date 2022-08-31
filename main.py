@@ -5,7 +5,7 @@ from tkinter import Frame, ttk
 from PIL import Image, ImageTk
 
 from GUI import *
-from python_prolog_interface import *
+from prolog_parser import *
 
 
 prolog = Prolog()
@@ -17,24 +17,32 @@ adivinado = None
 # Se encarga de la inicializacion del juego, una vez digitado el nombre en el prompt
 def begin():
     global adivinado
+    global preguntas
+
     begin_gui(animal_entry,begin_game,label1,ressi,resno)
     adivinado = animal_entry.get()
-    
-    clausulas = get_clauses(prolog,adivinado)
-    temp = []
-    for i in clausulas:
-        [temp.append(j) for j in i if j not in temp]
-    clausulas = temp
-
-
-    global preguntas
-    preguntas = clausulas
+    preguntas = format_clauses(prolog,adivinado)
+    print(preguntas)
     display_pregunta(preguntas[0],label_pregunta)
 
 # Se encarga de procesar cada pregunta una vez que se responde, y de mostrar la siguiente pregunta
 def respuesta(r):
     global preguntas
     global adivinado
+    if(r):
+        prolog.assertz("cierto("+preguntas[0]+")")
+    else:
+        prolog.assertz("falso("+preguntas[0]+")")
+    
+
+    preguntas2 = filter_clauses(prolog,adivinado,preguntas[0],r)
+
+    print(" ")
+    print("p filter ")
+    print(preguntas2)
+
+    
+    '''
     if(preguntas.__len__() > 1):
         n = 1
         while(n==1 and preguntas.__len__() > 0):
@@ -56,6 +64,7 @@ def respuesta(r):
             prolog.assertz(r+preguntas[0]+")")
         resultado = list(prolog.query("resuelve(adivina("+adivinado+",X))"))
         visualizar_fin(ressi,resno,assertsi,assertno,label_pregunta,image_label,resultado,fotos)
+'''
 
 # Se encarga de insertar el nuevo animal, en caso de que este no se encuentre en la base de conocimientos
 def assert_nuevo(r):
@@ -78,8 +87,8 @@ root.config(bg="lightgray")
 #Widgets estaticos
 left_frame = Frame(root, width=1260, height=700)
 left_frame.place(x=10,y=10)
-title = ttk.Label(root, text='Adivina Quien',font=("TkDefaultFont", 14))
-title.place(x=540, y=50)
+title = ttk.Label(root, text='Adivina Quien',font=("TkDefaultFont", 18))
+title.place(x=530, y=50)
 exit_button = ttk.Button(root, text='Salir', command=lambda: root.quit())
 exit_button.place(x=1150, y=650)
 
@@ -111,8 +120,8 @@ label1 = ttk.Label(root, text='Escriba el nombre del animal que la computadora i
 animal = tk.StringVar()
 animal_entry = ttk.Entry(root, textvariable=animal)
 begin_game = ttk.Button(root,text="Comenzar juego",command=begin)
-ressi = ttk.Button(root,text="Si",command=lambda: respuesta('cierto('))
-resno = ttk.Button(root,text="No",command=lambda: respuesta('falso('))
+ressi = ttk.Button(root,text="Si",command=lambda: respuesta(True))
+resno = ttk.Button(root,text="No",command=lambda: respuesta(False))
 assertsi = ttk.Button(root,text="Si",command=lambda: assert_nuevo('si'))
 assertno = ttk.Button(root,text="No",command=lambda: assert_nuevo('no'))
 denuevosi = ttk.Button(root,text="Si",command=lambda: restart(label1,animal_entry,begin_game,denuevosi,denuevono,label_pregunta))
