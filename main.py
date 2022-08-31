@@ -22,24 +22,23 @@ def begin():
     begin_gui(animal_entry,begin_game,label1,ressi,resno)
     adivinado = animal_entry.get()
     preguntas = format_clauses(prolog,adivinado)
-    print(preguntas)
     display_pregunta(preguntas[0],label_pregunta)
 
 # Se encarga de procesar cada pregunta una vez que se responde, y de mostrar la siguiente pregunta
 def respuesta(r):
     global preguntas
     global adivinado
-    if(r):
+    if(r == True):
         prolog.assertz("cierto("+preguntas[0]+")")
     else:
         prolog.assertz("falso("+preguntas[0]+")")
     
-
-    preguntas2 = filter_clauses(prolog,adivinado,preguntas[0],r)
-
-    print(" ")
-    print("p filter ")
-    print(preguntas2)
+    resultado = list(prolog.query("resuelve(adivina("+adivinado+",X))"))
+    if(bool(resultado)):
+        visualizar_fin(ressi,resno,assertsi,assertno,label_pregunta,image_label,resultado,fotos)
+    else:
+        preguntas = filter_clauses(prolog,adivinado,preguntas[0],r)
+        display_pregunta(preguntas[0],label_pregunta)
 
     
     '''
