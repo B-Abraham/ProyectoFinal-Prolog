@@ -5,12 +5,13 @@
 % En este apartado es donde se guardan las caracteristicas que posee
 % cada ave.
 
-zancuda(P):- tamano(P,grande),tamano_pico(P,grande),puede_caminar(P), puede_volar(P).
+zancuda(P):- tamano(P,grande),tamano_del_pico(P,grande),puede_caminar(P), puede_volar(P).
 
 rapaz(P):- tipo_de_alimentacion(P,carnivoro),tamano(P,mediano),puede_volar(P).
 
 anseriforme(P):- puede_caminar(P),puede_nadar(P),tamano(P,mediano).
 
+esfenisciforme(P):- tiene_aletas(P), puede_nadar(P).
 
 adivina(P,buho):-
     tamano_del_pico(P,mediano),
@@ -88,9 +89,9 @@ adivina(P,pinguino):-
     color_del_plumaje(P,blanco_negro),
     color_del_pico(P,amarillo),
     tipo_de_alimentacion(P,carnivoro),
-    puede_nadar(P),
     migra(P),
-    puede_caminar(P).
+    puede_caminar(P),
+    esfenisciforme(P).
 
 adivina(P,avestruz):-
     tamano(P,grande),
@@ -119,6 +120,7 @@ preguntable(color_del_pico(_,_)).
 preguntable(tipo_de_alimentacion(_,_)).
 preguntable(tamano(_,_)).
 preguntable(tamano_del_pico(_,_)).
+preguntable(tiene_aletas(_)).
 
 % En este apartado es donde se ejecuta el programa.
 resuelve(true):-!.
